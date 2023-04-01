@@ -54,31 +54,25 @@ no_error_interrupt_handlers 31
 common_interrupt_handler:
 
     pusha
+    mov ax, ds
+    push eax
+
+    mov ax, 0x10
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
     call interrupt_handlers
+
+    pop eax
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
     popa
+
     add esp, 8
     iret
-    ;pusha
-    ;mov ax, ds
-    ;push eax
-
-    ;mov ax, 0x10
-    ;mov ds, ax
-    ;mov es, ax
-    ;mov fs, ax
-    ;mov gs, ax
-    ;call interrupt_handlers
-
-    ;pop eax
-    ;mov ds, ax
-    ;mov es, ax
-    ;mov fs, ax
-    ;mov gs, ax
-    ;popa
-
-    ;add esp, 8
-    ;sti
-    ;iret
 
 ; The assembly function to load IDT
 load_idt:
