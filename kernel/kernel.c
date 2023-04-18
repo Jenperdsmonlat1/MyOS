@@ -36,6 +36,7 @@ char *months[] = {
 
 
 void print_date();
+void draw_all_things();
 
 void kernel_main() {
 
@@ -49,8 +50,7 @@ void kernel_main() {
     printf("[kernel]: Welcome.\n");
     print_date();
     init_vga();
-    draw_rect(20, 20, 0, 0, 70);
-    draw_rect(20, 20, 25, 25, 71);
+    draw_all_things();
 }
 
 void print_date() {
@@ -76,4 +76,15 @@ void print_date() {
     printf(" ");
     printf(year);
     printf("\n");
+}
+
+void draw_all_things() {
+
+    uint16_t pos_x = 0, pos_y = 0;
+
+    for (uint16_t i = 0; i < 321; i++) {
+        draw_rect(10, 10, pos_x, pos_y, (i % 75));
+        pos_x += 80;
+        pos_y += 80;
+    }
 }
