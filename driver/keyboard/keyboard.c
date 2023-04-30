@@ -30,7 +30,7 @@ void init_keyboard() {
     else if (interface_test_status == 255)
         printf("[-]: Erreur generale.\n");
 
-    set_scan_code(KEYBOARD_SCANCODE_2);
+    set_scan_code(KEYBOARD_SCANCODE_1);
     register_interrupt_handler(IRQ1, &keyboard_callback);
     terminal_setcolor(VGA_GREEN);
     printf("[+]: Clavier PS/2 initialise.\n");
@@ -56,97 +56,21 @@ uint8_t keyboard_enc_read_buffer() {
     return inb(KEYBOARD_ENCODER_READ_INPUT_BUFFER);
 }
 
-char get_code() {
-    char character = 0;
-    while ((character = keyboard_enc_read_buffer()) != 0) {
-        if (character > 0) {
-            return character;
-        }
-    }
 
-    return character;
-}
+char *get_ascii_char(uint8_t scancode) {
 
-void print_touche(char scancode) {
+    char *characters[] = {
+        "", "", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+        "0", "-", "=", "", "", "q", "w", "e", "r",
+        "t", "y", "u", "i", "o", "p", "[", "]", "\n", "",
+        "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "`", "",
+        "'\'", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "", 
+        "*", "", " ", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "7",
+        "8", "9", "-", "4", "5", "6", "+", "1", "2", "3", "0", ".", "", "",
+    };
 
-    if (scancode == 0x00) {
-        serial_print("[+]: Internal buffer overrun.\n", SERIAL_COM1_PORT);
-    } else if ((scancode >= 0x1 || scancode <= 0x58) && (scancode >= 0x81 || scancode <= 0xD8)) {
-        if (scancode == TOUCHE_A)
-            printf("a");
-        else if (scancode == TOUCHE_A)
-            printf("b");
-        else if (scancode == TOUCHE_B)
-            printf("c");
-        else if (scancode == TOUCHE_C)
-            printf("d");
-        else if (scancode == TOUCHE_D)
-            printf("e");
-        else if (scancode == TOUCHE_E)
-            printf("f");
-        else if (scancode == TOUCHE_F)
-            printf("g");
-        else if (scancode == TOUCHE_G)
-            printf("h");
-        else if (scancode == TOUCHE_H)
-            printf("i");
-        else if (scancode == TOUCHE_I)
-            printf("j");
-        else if (scancode == TOUCHE_J)
-            printf("k");
-        else if (scancode == TOUCHE_K)
-            printf("l");
-        else if (scancode == TOUCHE_L)
-            printf("m");
-        else if (scancode == TOUCHE_M)
-            printf("n");
-        else if (scancode == TOUCHE_N)
-            printf("o");
-        else if (scancode == TOUCHE_O)
-            printf("p");
-        else if (scancode == TOUCHE_P)
-            printf("q");
-        else if (scancode == TOUCHE_Q)
-            printf("r");
-        else if (scancode == TOUCHE_R)
-            printf("s");
-        else if (scancode == TOUCHE_S)
-            printf("t");
-        else if (scancode == TOUCHE_T)
-            printf("u");
-        else if (scancode == TOUCHE_U)
-            printf("v");
-        else if (scancode == TOUCHE_V)
-            printf("w");
-        else if (scancode == TOUCHE_W)
-            printf("x");
-        else if (scancode == TOUCHE_X)
-            printf("y");
-        else if (scancode == TOUCHE_Y)
-            printf("z");
-        else if (scancode == TOUCHE_Z)
-            printf("z");
-        else if(scancode == TOUCHE_ZERO)
-            printf("0");
-        else if (scancode == TOUCHE_UN)
-            printf("1");
-        else if (scancode == TOUCHE_DEUX)
-            printf("2");
-        else if (scancode == TOUCHE_TROIS)
-            printf("3");
-        else if (scancode == TOUCHE_QUATRE)
-            printf("4");
-        else if (scancode == TOUCHE_CINQ)
-            printf("5");
-        else if (scancode == TOUCHE_SIX)
-            printf("6");
-        else if (scancode == TOUCHE_SEPT)
-            printf("7");
-        else if (scancode == TOUCHE_HUIT)
-            printf("8");
-        else if (scancode == TOUCHE_NEUF)
-            printf("9");
-    }
+    return characters[scancode];
 }
 
 uint8_t keyboard_interface_test() {
@@ -181,11 +105,12 @@ void set_scan_code(uint8_t scancode) {
     outb(KEYBOARD_ENCODER_SEND_COMMAND, scancode);
 }
 
-void keyboard_callback(/*registers_t regs*/) {
+void keyboard_callback() {
     if (get_keyboard_status() & KEYBOARD_OUTPUT_BUFFER_STAT) {
-        //char code = keyboard_enc_read_buffer();
+        uint8_t code = keyboard_enc_read_buffer();
         serial_print("[+]: Touche pressé !!!!\n", SERIAL_COM1_PORT);
-        //print_touche(code);
+        serial_print(get_ascii_char(code), SERIAL_COM1_PORT);
+        printf(get_ascii_char(code));
     }
 
     PIC_endOfInterrupt(1);
