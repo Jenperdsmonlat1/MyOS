@@ -18,7 +18,9 @@ OBJFILES = obj/kernel.o \
 		   obj/vga_graphics.o \
 		   obj/irq.o \
 		   obj/pit.o \
-		   obj/rtc.o
+		   obj/rtc.o \
+		   obj/cpuid_asm.o \
+		   obj/cpuid.o
 
 LINKFILE = linker.ld
 
@@ -35,10 +37,12 @@ all:
 	nasm $(NASMPARAMS) -o interrupts.o kernel/idt/interrupts.asm
 	nasm $(NASMPARAMS) -o load_gdt.o kernel/gdt/load_gdt.asm
 	nasm $(NASMPARAMS) -o cursor.o kernel/io/cursor/cursor.asm
+	nasm $(NASMPARAMS) -o cpuid_asm.o kernel/io/cpuid/cpuid_asm.asm
 	i686-elf-gcc -c kernel/kernel.c -o kernel.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/io/serial_port/serial_port.c -o serial_port.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/libs/stdio/stdio.c -o stdio.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/driver/keyboard/keyboard.c -o keyboard.o $(GCCPARAMS)
+	i686-elf-gcc -c kernel/io/cpuid/cpuid.c -o cpuid.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/driver/vga/text_mode/vga.c -o vga.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/idt/idt.c -o idt.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/gdt/gdt.c -o gdt.o $(GCCPARAMS)
@@ -65,6 +69,8 @@ all:
 	mv irq.o obj/irq.o
 	mv pit.o obj/pit.o
 	mv rtc.o obj/rtc.o
+	mv cpuid_asm.o obj/cpuid_asm.o
+	mv cpuid.o obj/cpuid.o
 
 myos.bin: $(OBJFILES) $(LINKFILE)
 	i686-elf-gcc -T $(LINKFILE) -o $@ $(OBJFILES) $(GCCLINKING)
