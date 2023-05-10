@@ -6,6 +6,7 @@
 #include <timer/pit.h>
 #include <timer/rtc.h>
 #include <vga/graphics_mode/vga_graphics.h>
+#include <io/cpuid.h>
 #include <stdint.h>
 
 
@@ -34,9 +35,17 @@ char *months[] = {
     "Decembre"
 };
 
+char *processor_type[] = {
+    "Original OEM Processor",
+    "Intel OverDrive Processor",
+    "Dual processor",
+    "Intel reserved"
+};
+
 
 void print_date();
 void draw_all_things();
+void show_cpu_infos();
 
 void kernel_main() {
 
@@ -49,7 +58,10 @@ void kernel_main() {
     setup_rtc();
     printf("[kernel]: Welcome.\n");
     print_date();
-    terminal_setcolor(VGA_BROWN);
+    
+    terminal_setcolor(VGA_GREEN);
+    printf("[+]: Processor Type: ");
+    printf(processor_type[get_processor_type()]);
     
     for (;;) {
         asm ("hlt");
@@ -90,4 +102,9 @@ void draw_all_things() {
         pos_x += 80;
         pos_y += 80;
     }
+}
+
+void show_cpu_infos() {
+
+
 }
