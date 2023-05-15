@@ -4,7 +4,12 @@ My simple operating system I made for fun.
 
 Support:<br>
 RTC to get the current date.<br>
-IRQ were configured but don't work perfectly.
+IRQ were configured but don't work perfectly.<br>
+Keyboard driver is available.<br>
+VGA Driver for text mode and graphics mode.<br>
+Multiboot.<br>
+Serial port was configured.<br>
+And so others things.<br>
 
 <br>
 In graphics mode.
