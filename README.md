@@ -2,9 +2,9 @@
 My simple operating system I made for fun.
 (Always in development)
 
-I enable graphics mode 320 by 200 with 256 colors.
-I configure the PIT and the PIC.
-I also configure the RTC to get the current date.
+Support:<br>
+RTC to get the current date.<br>
+IRQ were configured but don't work perfectly.
 
 <br>
 In graphics mode.
