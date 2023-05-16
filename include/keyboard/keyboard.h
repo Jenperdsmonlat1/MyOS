@@ -92,6 +92,6 @@ char *get_ascii_char(uint8_t scancode);
 uint8_t keyboard_interface_test();
 uint8_t enable_keyboard();
 uint8_t disable_keyboard();
-void set_scan_code(uint8_t scancode);
+int8_t set_scan_code(uint8_t scancode);
 
 #endif
