@@ -42,7 +42,17 @@ void init_keyboard() {
     else if (interface_test_status == 255)
         printf("[-]: Erreur generale.\n");
 
-    set_scan_code(KEYBOARD_SCANCODE_1);
+    int8_t scancode = set_scan_code(KEYBOARD_SCANCODE_1);
+    if (scancode == KEYBOARD_SCANCODE_1) {
+        terminal_setcolor(VGA_GREEN);
+        printf("Scancode was set.\n");
+        terminal_setcolor(VGA_WHITE);
+    } else {
+        terminal_setcolor(VGA_RED);
+        printf("Scancode was not set.\n");
+        terminal_setcolor(VGA_WHITE);
+    }
+    
     register_interrupt_handler(1, &keyboard_callback);
     
     terminal_setcolor(VGA_GREEN);
@@ -113,7 +123,13 @@ uint8_t disable_keyboard() {
     }
 }
 
-void set_scan_code(uint8_t scancode) {
+int8_t set_scan_code(uint8_t scancode) {
     outb(KEYBOARD_ENCODER_SEND_COMMAND, KEYBOARD_SET_ATLERNATE_SCAN_CODE);
     outb(KEYBOARD_ENCODER_SEND_COMMAND, scancode);
+    
+    uint8_t result = inb(KEYBOARD_ENCODER_SEND_COMMAND);
+    if (result == KEYBOARD_ACK_COMMAND)
+        return scancode;
+    else
+        return -1;
 }
