@@ -51,8 +51,8 @@ void kernel_main(multiboot_info_t *multiboot_struct, uint32_t magic_number) {
     terminal_init(VGA_WHITE, VGA_BLACK);
 
     init_gdt();
-    init_pit(50);
     init_idt();
+    init_pit(50);
     init_keyboard();
     setup_rtc();
     printf("[kernel]: Welcome.\n");
