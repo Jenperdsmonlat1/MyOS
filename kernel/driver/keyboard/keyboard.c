@@ -10,6 +10,7 @@
 #include <vga/graphics_mode/vga_graphics.h>
 
 
+uint8_t scancode_set = 0;
 bool keyboard_status_enable = false;
 
 static void keyboard_callback(registers_t regs) {
@@ -42,8 +43,8 @@ void init_keyboard() {
     else if (interface_test_status == 255)
         printf("[-]: Erreur generale.\n");
 
-    int8_t scancode = set_scan_code(KEYBOARD_SCANCODE_1);
-    if (scancode == KEYBOARD_SCANCODE_1) {
+    scancode_set = set_scan_code(KEYBOARD_SCANCODE_1);
+    if (scancode_set == KEYBOARD_SCANCODE_1) {
         terminal_setcolor(VGA_GREEN);
         printf("Scancode was set.\n");
         terminal_setcolor(VGA_WHITE);
@@ -81,19 +82,41 @@ uint8_t keyboard_enc_read_buffer() {
 
 
 char *get_ascii_char(uint8_t scancode) {
-
-    char *characters[] = {
-        "", "", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-        "0", "-", "=", "", "", "q", "w", "e", "r",
-        "t", "y", "u", "i", "o", "p", "[", "]", "\n", "",
-        "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "`", "",
-        "'\'", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "", 
-        "*", "", " ", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "7",
-        "8", "9", "-", "4", "5", "6", "+", "1", "2", "3", "0", ".", "", "",
+    
+    char *characters[3][] = {
+         {
+            "", "", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "0", "-", "=", "", "", "q", "w", "e", "r",
+            "t", "y", "u", "i", "o", "p", "[", "]", "\n", "",
+            "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "`", "",
+            "'\'", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "", 
+            "*", "", " ", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "7",
+            "8", "9", "-", "4", "5", "6", "+", "1", "2", "3", "0", ".", "", "",
+        },
+        {
+            "", "[F9]", "", "[F5]", "[F3]", "[F1]", "[F2]", "[F12]", "",
+            "[F10]", "[F8]", "[F6]", "[F4]", "[TAB]", "`", "", "", "[LALT]", "[LSHIFT]",
+            "", "[LCTRL]", "q", "1", "", "", "", "z", "s", "a", "w", "2",
+            "", "", "c", "x", "d", "e", "4", "3", "", "", " ", "v", "f", "t",
+            "r", "5", "", "", "n", "b", "h", "g", "y", "6", "", "", "", "m", "j",
+            "u", "7", "8", "", "", ",", "k", "i", "o", "0", "9", "", "", ".", "/", "l",
+            ";", "p", "-", "", "", "", "'", "[", "=", "", "", "", "[RSHIFT]", "[ENTER]",
+            "]", "", "\"", "", "", "", "", "", "", "", "", "[BCKSPACE]", "", "", "1",
+            "", "4", "7", "", "", "", "0", ".", "2", "5", "6", "8", "[ESC]", "",
+            "[F11]", "+", "3", "-", "*", "9", "", "", "", "", "", "[F7]", "", "[RALT]",
+            "", "", "[RCTRL]", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "/", "", "",
+            "", "", "", "", "", "", "", "", "", "[ENTER]", "", "", "", "", "", "", "[END]",
+            ""n "[CLEFT]", "", "", "", "", "", "", "[CDOWN]", "", "[CRIGHT]", "[CUP]", "",
+            "", "", "", "", "", "", "", "", "", "", "[F9]"
+        },
+        {
+        }
     };
 
-    return characters[scancode];
+    return characters[scancode_set][scancode];
 }
 
 uint8_t keyboard_interface_test() {
