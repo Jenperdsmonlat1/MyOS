@@ -24,6 +24,8 @@ void set_idt_descriptor(uint8_t vector, void *isr, uint8_t flag) {
 void init_idt(void) {
 
     printf("[+]: Chargement de IDT.\n");
+    
+    asm volatile("cli");
 
     char *vector_number = 0;
     idtr.base = (uintptr_t)&idt[0];
