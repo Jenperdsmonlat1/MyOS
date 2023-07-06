@@ -8,6 +8,9 @@ IRQ were configured but don't work perfectly.<br>
 Keyboard driver is available.<br>
 VGA Driver for text mode and graphics mode.<br>
 Multiboot.<br>
+Support PCI Device<br>
+LAPIC Driver<br>
+VESA Driver available (not tested yet)<br>
 Serial port was configured.<br>
 And so others things.<br>
 
