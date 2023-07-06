@@ -22,8 +22,9 @@ OBJFILES = obj/kernel.o \
 		   obj/pc_speaker.o \
 		   obj/sound_blaster.o \
 		   obj/stdlib.o \
-		   obj/cpu_infos.o
-		   
+		   obj/lapic.o \
+		   obj/msr.o \
+		   obj/pci.o
 
 LINKFILE = linker.ld
 
@@ -40,7 +41,9 @@ all:
 	nasm $(NASMPARAMS) -o interrupts.o kernel/idt/interrupts.asm
 	nasm $(NASMPARAMS) -o load_gdt.o kernel/gdt/load_gdt.asm
 	nasm $(NASMPARAMS) -o cursor.o kernel/io/cursor/cursor.asm
+	nasm $(NASMPARAMS) -o msr.o kernel/io/apic/msr.asm
 	i686-elf-gcc -c kernel/kernel.c -o kernel.o $(GCCPARAMS)
+	i686-elf-gcc -c kernel/io/apic/lapic.c -o lapic.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/sound/sound_blaster.c -o sound_blaster.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/sound/pc_speaker.c -o pc_speaker.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/io/serial_port/serial_port.c -o serial_port.o $(GCCPARAMS)
@@ -50,13 +53,13 @@ all:
 	i686-elf-gcc -c kernel/driver/vga/text_mode/vga.c -o vga.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/idt/idt.c -o idt.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/gdt/gdt.c -o gdt.o $(GCCPARAMS)
+	i686-elf-gcc -c kernel/pci/pci.c -o pci.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/io/pic/pic.c -o pic.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/libs/strings/strings.c -o strings.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/driver/vga/graphics_mode/vga_graphics.c -o vga_graphics.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/idt/irq/irq.c -o irq.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/io/timer/pit.c -o pit.o $(GCCPARAMS)
 	i686-elf-gcc -c kernel/io/timer/rtc.c -o rtc.o $(GCCPARAMS)
-	i686-elf-gcc -c kernel/io/cpu_infos/cpu_infos.c -o cpu_infos.o $(GCCPARAMS)
 	mv boot.o obj/boot.o
 	mv interrupts.o obj/interrupts.o
 	mv cursor.o obj/cursor.o
@@ -77,7 +80,9 @@ all:
 	mv pc_speaker.o obj/pc_speaker.o
 	mv sound_blaster.o obj/sound_blaster.o
 	mv stdlib.o obj/stdlib.o
-	mv cpu_infos.o obj/cpu_infos.o
+	mv lapic.o obj/lapic.o
+	mv msr.o obj/msr.o
+	mv pci.o obj/pci.o
 
 myos.bin: $(OBJFILES) $(LINKFILE)
 	i686-elf-gcc -T $(LINKFILE) -o $@ $(OBJFILES) $(GCCLINKING)
