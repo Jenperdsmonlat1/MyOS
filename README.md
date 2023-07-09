@@ -14,6 +14,11 @@ VESA Driver available (not tested yet)<br>
 Serial port was configured.<br>
 And so others things.<br>
 
+
+Thanks to devse and osdev on discord for their help. on this very difficult project.
+
+https://devse.wiki/
+https://wiki.osdev.org/Main_Page
 <br>
 In graphics mode.
 <img
